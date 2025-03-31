@@ -49,6 +49,64 @@
     end (while loop)
 
 ``````
+<h2>Program</h2>
+``````
+from collections import defaultdict
+
+H_dist = {}  # Heuristic distance dictionary
+
+def aStarAlgo(start_node, stop_node):
+    open_set = {start_node}  # Use set notation
+    closed_set = set()
+    g = {}  # Store distance from starting node
+    parents = {}  # Store parent nodes
+
+    g[start_node] = 0
+    parents[start_node] = start_node
+
+    while open_set:
+        n = None
+
+        # Find node with lowest f() = g(n) + h(n)
+        for v in open_set:
+            if n is None or g[v] + heuristic(v) < g[n] + heuristic(n):
+                n = v
+
+        if n is None:
+            print("Path does not exist!")
+            return None
+
+        if n == stop_node:
+            path = []
+            while parents[n] != n:
+                path.append(n)
+                n = parents[n]
+            path.append(start_node)
+            path.reverse()
+            print("Path found: {}".format(path))
+            return path
+
+        # Process neighbors
+        open_set.remove(n)
+        closed_set.add(n)
+
+        for (m, weight) in get_neighbors(n):
+            if m in closed_set:
+                continue
+
+            if m not in open_set:
+                open_set.add(m)
+                parents[m] = n
+                g[m] = g[n] + weight
+            else:
+                if g[m] > g[n] + weight:
+                    g[m] = g[n] + weight
+                    parents[m] = n
+
+    print("Path does not exist!")
+    return None
+
+``````
 
 <hr>
 <h2>Sample Graph I</h2>
